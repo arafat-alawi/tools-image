@@ -1,6 +1,6 @@
 # Use a base image to build (and download) the tools on
 
-FROM node:current-bullseye-slim as build
+FROM node:21-bookworm-slim as build
 
 LABEL maintainer="support@go-forward.net"
 LABEL vendor="Go Forward"
@@ -55,7 +55,7 @@ RUN git clone --depth=1 https://github.com/drwetter/testssl.sh /tmp/testssl && \
     mv /tmp/testssl/testssl.sh /usr/lib/testssl/testssl.sh && \
     chmod ugo+x /usr/lib/testssl/testssl.sh
 
-FROM node:current-bullseye-slim as release
+FROM node:21-bookworm-slim as release
 # Default entry point
 WORKDIR /workdir
 
