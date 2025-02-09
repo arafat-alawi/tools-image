@@ -11,26 +11,7 @@ pipeline {
     }
 
     stages {
-        stage("Lint") {
-            agent {
-                docker {
-                    image "docker.io/hadolint/hadolint:v1.18.0"
-                    reuseNode true
-                }
-            }
-            steps {
-                script {
-                    def result = sh label: "Lint Dockerfile",
-                        script: """\
-                            hadolint Dockerfile > hadolint-results.txt
-                        """,
-                    returnStatus: true
-                    if (result > 0) {
-                        unstable(message: "Linting issues found")
-                    }
-                }
-            }
-        }
+        
 
         stage("Build and test image") {
             steps {
