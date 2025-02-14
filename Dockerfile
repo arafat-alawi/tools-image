@@ -31,7 +31,6 @@ ENV PATH="/opt/venv/bin:$PATH"
 
 # Install the latest version of wheel first, as that is not installed by default
 # hadolint ignore=DL3013
-RUN python3 -m pip install wheel --no-cache-dir
 # Install packages as specified in the requirements.txt file
 # hadolint ignore=DL3059
 RUN python3 -m pip install -r requirements.txt --no-cache-dir && \
