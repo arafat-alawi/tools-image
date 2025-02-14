@@ -28,7 +28,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Create virtual environment
 RUN python3 -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
-RUN python3 -m pip install wheel --no-cache-dir
 
 RUN git clone --depth=1 https://github.com/anchore/anchore-cli && \
     cd anchore-cli && \
