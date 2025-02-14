@@ -30,6 +30,11 @@ RUN python3 -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 RUN python3 -m pip install wheel --no-cache-dir
 
+RUN git clone --depth=1 https://github.com/anchore/anchore-cli && \
+    cd anchore-cli && \
+    python3 -m pip install  --upgrade .
+
+RUN python3 -m pip install --upgrade requests
 # Install the latest version of wheel first, as that is not installed by default
 # hadolint ignore=DL3013
 # Install packages as specified in the requirements.txt file
