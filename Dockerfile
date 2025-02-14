@@ -28,6 +28,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Create virtual environment
 RUN python3 -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
+RUN python3 -m pip install wheel --no-cache-dir
 
 # Install the latest version of wheel first, as that is not installed by default
 # hadolint ignore=DL3013
