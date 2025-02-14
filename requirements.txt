@@ -5,4 +5,4 @@ cyclonedx-bom
 detect-secrets
 pylint
 trufflehog
-yamllint
+yamllint==1.33.0
