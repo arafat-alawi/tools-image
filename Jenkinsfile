@@ -12,6 +12,11 @@ pipeline {
 
     stages {
         
+                stage('Print User') {
+            steps {
+                sh 'whoami'
+            }
+        }
 
         stage("Build and test image") {
             steps {
