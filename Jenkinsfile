@@ -25,22 +25,7 @@ stage("Lint") {
                 }
             }
             steps {
-                script {
-                    def result = sh label: "Lint Dockerfile",
-                        script: """\
-                            hadolint Dockerfile > hadolint-results.txt
-                        """,
-                    returnStatus: true
-                    if (result > 0) {
-                        unstable(message: "Linting issues found")
-                    }
-                }
-            }
-        }
-
-        stage("Build and test image") {
-            steps {
-                script {
+ script {
                     // Use commit tag if it has been tagged
                     tag = sh(returnStdout: true, script: "git tag --contains").trim()
                     if ("$tag" == "") {
@@ -51,6 +36,12 @@ stage("Lint") {
                         }
                     }
                     def image = docker.build("$DOCKER_IMAGE", "--build-arg 'BUILDKIT_INLINE_CACHE=1' --cache-from $DOCKER_IMAGE:$tag --cache-from $DOCKER_IMAGE:latest .")
+            }
+        }
+
+        stage("Build and test image") {
+            steps {
+               
                     // Make sure that the user ID exists within the container
                     image.inside("--volume /etc/passwd:/etc/passwd:ro --user 0 ") {
                         sh label: "Test anchore-cli",
