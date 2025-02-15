@@ -17,7 +17,8 @@ pipeline {
                 sh 'whoami'
             }
         }
-         agent {
+stage("Lint") {
+            agent {
                 docker {
                     image "docker.io/hadolint/hadolint:v1.18.0"
                     reuseNode true
