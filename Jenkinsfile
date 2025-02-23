@@ -13,7 +13,7 @@ pipeline {
     stages {
         
 
-stage("Lint") {
+stage("Lint1") {
             agent {
                 docker {
                     image "docker.io/hadolint/hadolint:v1.18.0 "
