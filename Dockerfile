@@ -37,7 +37,6 @@ ENV PATH="/opt/venv/bin:$PATH"
 # Install packages as specified in the requirements.txt file
 # hadolint ignore=DL3059
 RUN python3 -m pip install -r requirements.txt --no-cache-dir && \
-    cyclonedx-py -r --format json --output /opt/venv/sbom.json
 
 # Download and unzip sonar-scanner-cli
 RUN curl -sL "https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SCANNER}-linux.zip" -o /tmp/scanner.zip && \
@@ -45,12 +44,7 @@ RUN curl -sL "https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/so
     mv "/tmp/sonarscanner/sonar-scanner-${SCANNER}-linux" /usr/lib/sonar-scanner
 
 # Clone jwt_tool
-RUN git clone --depth=1 --branch "${JWT_TOOL}" https://github.com/ticarpi/jwt_tool /tmp/jwt_tool && \
-    rm -rf /tmp/jwt_tool/.git && \
-    rm -rf /tmp/jwt_tool/.github && \
-    rm -f /tmp/jwt_tool/Dockerfile && \
-    mv /tmp/jwt_tool /usr/lib/jwt_tool && \
-    chmod ugo+x /usr/lib/jwt_tool/jwt_tool.py
+
 
 # Clone nikto.pl
 RUN git clone --depth=1 --branch "${NIKTO}" https://github.com/sullo/nikto /tmp/nikto && \
@@ -66,23 +60,18 @@ RUN git clone --depth=1 --branch "${TESTSSL}" https://github.com/drwetter/testss
     mv /tmp/testssl/testssl.sh /usr/lib/testssl/testssl.sh && \
     chmod ugo+x /usr/lib/testssl/testssl.sh
 
-# Install Grype
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-RUN curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin "${GRYPE}"
+
 
 FROM node:21-bookworm-slim as release
 # Default entry point
 WORKDIR /workdir
-COPY html-table.tmpl /usr/local/lib/html-table.tmpl
 
 COPY --chown=999:999 --from=build /opt/venv /opt/venv
-COPY --from=build /usr/lib/jwt_tool/ /usr/lib/jwt_tool/
 COPY --from=build /usr/lib/nikto/ /usr/lib/nikto/
 COPY --from=build /usr/lib/sonar-scanner/ /usr/lib/sonar-scanner/
 COPY --from=build /usr/lib/testssl/ /usr/lib/testssl/
 COPY --from=build /usr/local/bin/grype /usr/local/bin/grype
-RUN ln -s /usr/lib/jwt_tool/jwt_tool.py /usr/local/bin/jwt_tool.py && \
-    ln -s /usr/lib/nikto/nikto.pl /usr/local/bin/nikto.pl && \
+RUN ln -s /usr/lib/nikto/nikto.pl /usr/local/bin/nikto.pl && \
     ln -s /usr/lib/sonar-scanner/bin/sonar-scanner /usr/local/bin/sonar-scanner && \
     ln -s /usr/lib/testssl/testssl.sh /usr/local/bin/testssl.sh
 
@@ -125,4 +114,3 @@ RUN groupadd -r tool && \
 USER tool
 
 # Create first-time configuration automatically
-RUN /usr/lib/jwt_tool/jwt_tool.py || true
