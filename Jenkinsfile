@@ -23,6 +23,7 @@ stage("Lint") {
             }
             steps {
                 script {
+                    // Use commit tag if it has been tagged
                     tag = sh(returnStdout: true, script: "git tag --contains").trim()
                     if ("$tag" == "") {
                         if ("${BRANCH_NAME}" == "master") {
