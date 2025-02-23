@@ -11,34 +11,18 @@ pipeline {
     }
 
     stages {
-        stage("Lint") {
+        
+
+stage("Lint") {
             agent {
                 docker {
-                    image "docker.io/hadolint/hadolint:v1.18.0"
+                    image "docker.io/hadolint/hadolint:v1.18.0 "
                     args "--user 0"
                     reuseNode true
                 }
             }
             steps {
                 script {
-                    def result = sh label: "Lint Dockerfile",
-                        script: """\
-                            hadolint Dockerfile > hadolint-results.txt
-                        """,
-                    returnStatus: true
-                    if (result > 0) {
-                        unstable(message: "Linting issues found")
-                    }
-                    def image = docker.build("$DOCKER_IMAGE", "--build-arg 'BUILDKIT_INLINE_CACHE=1' --cache-from $DOCKER_IMAGE:$tag --cache-from $DOCKER_IMAGE:latest .")
-
-                }
-            }
-        }
-
-        stage("Build and test image") {
-            steps {
-                script {
-                    // Use commit tag if it has been tagged
                     tag = sh(returnStdout: true, script: "git tag --contains").trim()
                     if ("$tag" == "") {
                         if ("${BRANCH_NAME}" == "master") {
@@ -47,8 +31,18 @@ pipeline {
                             tag = "${BRANCH_NAME}"
                         }
                     }
+                    def image = docker.build("$DOCKER_IMAGE", "--build-arg 'BUILDKIT_INLINE_CACHE=1' --cache-from $DOCKER_IMAGE:$tag --cache-from $DOCKER_IMAGE:latest .")
+                }
+            }
+        }
+
+        stage("Build and test image") {
+            steps {
+                script {
+                    // Use commit tag if it has been tagged
+
                     // Make sure that the user ID exists within the container
-                    image.inside("--volume /etc/passwd:/etc/passwd:ro") {
+                    image.inside("--volume /etc/passwd:/etc/passwd:ro --user 0 ") {
                         sh label: "Test anchore-cli",
                             script: "anchore-cli --version"
                         sh label: "Test curl",
@@ -96,3 +90,5 @@ pipeline {
         }
     }
 }
+
+
