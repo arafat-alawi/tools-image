@@ -6,6 +6,7 @@ detect-secrets==1.4.0
 pylint==3.0.3
 trufflehog
 yamllint==1.33.0
+anchorecli
 
 
 
