@@ -43,6 +43,8 @@ RUN python3 -m pip install --no-build-isolation PyYAML==5.4.1 --no-cache-dir
 # Step 3: Install all remaining dependencies
 RUN python3 -m pip install -r requirements.txt --no-cache-dir
 
+RUN python3 -m pip uninstall -y chardet
+
 # Step 4: Generate SBOM of all installed packages
 
 RUN cyclonedx-py requirements \
@@ -98,9 +100,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Update node package manager and typescript package
 # Update packages
-RUN npm install --location=global \   
+RUN npm install --location=global \
+    npm@10.5.0 \
     typescript@latest \
     @cyclonedx/bom@latest \
+    && npm update --global \
     && npm cache clean --force \
     && rm -rf /root/.npm/*
 
