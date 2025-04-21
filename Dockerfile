@@ -46,8 +46,7 @@ RUN python3 -m pip install -r requirements.txt --no-cache-dir
 # Step 4: Generate SBOM of all installed packages
 
 RUN cyclonedx-py requirements \
-      --format json \
-      --output /opt/venv/sbom.json \
+      -o /opt/venv/sbom.json \
       requirements.txt
 
 # Download and unzip sonar-scanner-cli
