@@ -1,6 +1,6 @@
 # Use a base image to build (and download) the tools on
 
-FROM node:18.20-bookworm-slim as build
+FROM node:21-bookworm-slim as build
 
 LABEL maintainer="support@go-forward.net"
 LABEL vendor="Go Forward"
@@ -16,7 +16,7 @@ ARG GRYPE=v0.74.1 \
 
 # Install necessary binaries
 # hadolint ignore=DL3008
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update && apt-get install -y build-essential  \
     ca-certificates \
     curl \
     git \
@@ -32,12 +32,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN python3 -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
-# Install the latest version of wheel first, as that is not installed by default
-# hadolint ignore=DL3013
-# Install packages as specified in the requirements.txt file
-# hadolint ignore=DL3059
-RUN python3 -m pip install -r requirements.txt --no-cache-dir && \
-    cyclonedx-py -r --format json --output /opt/venv/sbom.json
+
+# 2–4: install Cython, build PyYAML, install rest, generate SBOM
+
+
+RUN python3 -m pip install "Cython<3.0.0" wheel --no-cache-dir \
+ && python3 -m pip install --no-build-isolation PyYAML==5.4.1 --no-cache-dir \
+ && python3 -m pip install -r requirements.txt --no-cache-dir \
+ && cyclonedx-py -r --format json --output /opt/venv/sbom.json
 
 # Download and unzip sonar-scanner-cli
 RUN curl -sL https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SCANNER}-linux.zip -o /tmp/scanner.zip && \
@@ -58,7 +60,7 @@ RUN git clone --depth=1 https://github.com/drwetter/testssl.sh /tmp/testssl && \
     mv /tmp/testssl/testssl.sh /usr/lib/testssl/testssl.sh && \
     chmod ugo+x /usr/lib/testssl/testssl.sh
 
-    FROM node:18.20-bookworm-slim as release
+    FROM node:21-bookworm-slim as release
 # Default entry point
 WORKDIR /workdir
 
