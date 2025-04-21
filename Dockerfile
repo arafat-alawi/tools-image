@@ -35,18 +35,17 @@ ENV PATH="/opt/venv/bin:$PATH"
 
 
 
-RUN pip install --no-cache-dir wheel "Cython<3.0.0"
+RUN python3 -m pip install "Cython<3.0.0" wheel --no-cache-dir
 
+# Step 2: Install PyYAML 5.4.1 from source
+RUN python3 -m pip install --no-build-isolation PyYAML==5.4.1 --no-cache-dir
 
-RUN pip install --no-cache-dir --no-build-isolation PyYAML==5.4.1
+# Step 3: Install all remaining dependencies
+RUN python3 -m pip install -r requirements.txt --no-cache-dir
 
+# Step 4: Generate SBOM of all installed packages
+RUN cyclonedx-py -r --format json --output /opt/venv/sbom.json
 
-RUN pip install --no-cache-dir -r requirements.txt
-
-RUN cyclonedx-py requirements \
-      --requirements requirements.txt \
-      --format json \
-      --output /opt/venv/sbom.json
 # Download and unzip sonar-scanner-cli
 RUN curl -sL https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SCANNER}-linux.zip -o /tmp/scanner.zip && \
     unzip /tmp/scanner.zip -d /tmp/sonarscanner && \
