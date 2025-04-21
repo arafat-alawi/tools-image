@@ -10,3 +10,4 @@ pycryptodomex
 pylint
 ssh-audit
 termcolor
+chardet<5
