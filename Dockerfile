@@ -43,7 +43,6 @@ RUN python3 -m pip install --no-build-isolation PyYAML==5.4.1 --no-cache-dir
 # Step 3: Install all remaining dependencies
 RUN python3 -m pip install -r requirements.txt --no-cache-dir
 
-RUN python3 -m pip uninstall -y chardet
 
 # Step 4: Generate SBOM of all installed packages
 
