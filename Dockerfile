@@ -102,7 +102,7 @@ RUN npm install --location=global \
     typescript@latest \
     @cyclonedx/bom@latest \
     && npm update  \
-    corepack@latest \
+    &&  npm install --global corepack@latest \
     && npm cache clean --force \
     && rm -rf /root/.npm/*
 
