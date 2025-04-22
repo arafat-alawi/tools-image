@@ -46,7 +46,7 @@ pipeline {
                     }
                     def image = docker.build("$DOCKER_IMAGE", "--build-arg 'BUILDKIT_INLINE_CACHE=1' --cache-from $DOCKER_IMAGE:$tag --cache-from $DOCKER_IMAGE:latest .")
                     // Make sure that the user ID exists within the container
-                    image.inside("--volume /etc/passwd:/etc/passwd:ro --user 0") {
+                    image.inside("--volume /etc/passwd:/etc/passwd:ro ") {
                         sh label: "Test Python requests version",
         script: "python3 -c 'import requests; print(\"requests version:\", requests.__version__)'"
                         sh label: "Test anchore-cli",
