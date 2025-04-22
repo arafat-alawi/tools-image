@@ -1,6 +1,6 @@
 # Use a base image to build (and download) the tools on
 
-FROM node:21-bookworm-slim as build
+FROM node:22-bookworm-slim as build
 
 LABEL maintainer="support@go-forward.net"
 LABEL vendor="Go Forward"
@@ -67,7 +67,7 @@ RUN git clone --depth=1 https://github.com/drwetter/testssl.sh /tmp/testssl && \
     mv /tmp/testssl/testssl.sh /usr/lib/testssl/testssl.sh && \
     chmod ugo+x /usr/lib/testssl/testssl.sh
 
-FROM node:21-bookworm-slim as release
+FROM node:22-bookworm-slim as release
 # Default entry point
 WORKDIR /workdir
 
@@ -101,7 +101,7 @@ RUN npm install --location=global \
     npm@latest \
     typescript@latest \
     @cyclonedx/bom@latest \
-    && npm update --global \
+    && npm update  \
     && npm cache clean --force \
     && rm -rf /root/.npm/*
 
