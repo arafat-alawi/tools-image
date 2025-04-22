@@ -98,8 +98,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Update node package manager and typescript package
 # Update packages
 RUN npm install --location=global \
+    npm@latest \
     typescript@latest \
     @cyclonedx/bom@latest \
+    && npm update --global \
     && npm cache clean --force \
     && rm -rf /root/.npm/*
 
