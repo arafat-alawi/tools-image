@@ -67,7 +67,7 @@ RUN git clone --depth=1 https://github.com/drwetter/testssl.sh /tmp/testssl && \
     mv /tmp/testssl/testssl.sh /usr/lib/testssl/testssl.sh && \
     chmod ugo+x /usr/lib/testssl/testssl.sh
 
-    FROM node:21-bookworm-slim as release
+FROM node:21-bookworm-slim as release
 # Default entry point
 WORKDIR /workdir
 
@@ -98,10 +98,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Update node package manager and typescript package
 # Update packages
 RUN npm install --location=global \
-    npm@10.5.0 \
     typescript@latest \
     @cyclonedx/bom@latest \
-    && npm update --global \
     && npm cache clean --force \
     && rm -rf /root/.npm/*
 
