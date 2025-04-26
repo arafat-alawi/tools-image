@@ -48,6 +48,10 @@ RUN python3 -m pip install -r requirements.txt --no-cache-dir
 
 RUN cyclonedx-py -r -i requirements.txt --format json -o /opt/venv/sbom.json
 
+RUN cyclonedx-py environment \
+      --format json \
+      -o /opt/venv/sbom.json
+
 # Download and unzip sonar-scanner-cli
 RUN curl -sL https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SCANNER}-linux.zip -o /tmp/scanner.zip && \
     unzip /tmp/scanner.zip -d /tmp/sonarscanner && \
