@@ -112,7 +112,7 @@ RUN npm install --location=global \
     && rm -rf /root/.npm/*
 
 ENV ANCHORE_CLI_PASS=foobar \
-    ANCHORE_CLI_URL=http://anchore-engine_api_1:8228/v1 \
+    ANCHORE_CLI_URL=http://anchore-engine-api-1:8228/v1 \
     ANCHORE_CLI_USER=admin \
     LC_ALL=C.UTF-8 \
     NODE_PATH=/usr/local/lib/node_modules \
