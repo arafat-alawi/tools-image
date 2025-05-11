@@ -1,6 +1,6 @@
 # Use a base image to build (and download) the tools on
 
-FROM node:22-bookworm-slim as build
+FROM node:22-bookworm-slim AS build
 
 LABEL maintainer="support@go-forward.net"
 LABEL vendor="Go Forward"
@@ -48,7 +48,7 @@ RUN python3 -m pip install -r requirements.txt --no-cache-dir
 
 RUN cyclonedx-py -r -i requirements.txt --format json -o /opt/venv/sbom.json
 
-RUN cyclonedx-py environment \
+RUN cyclonedx-py --environment \
       --format json \
       -o /opt/venv/sbom.json
 
@@ -71,7 +71,7 @@ RUN git clone --depth=1 https://github.com/drwetter/testssl.sh /tmp/testssl && \
     mv /tmp/testssl/testssl.sh /usr/lib/testssl/testssl.sh && \
     chmod ugo+x /usr/lib/testssl/testssl.sh
 
-FROM node:22-bookworm-slim as release
+FROM node:22-bookworm-slim AS release
 # Default entry point
 WORKDIR /workdir
 
