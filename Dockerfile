@@ -1,6 +1,6 @@
 # Use a base image to build (and download) the tools on
 
-FROM node:22-bookworm-slim AS build
+FROM node:22.18-bookworm-slim AS build
 
 LABEL maintainer="support@go-forward.net"
 LABEL vendor="Go Forward"
@@ -72,7 +72,7 @@ RUN git clone --depth=1 https://github.com/drwetter/testssl.sh /tmp/testssl && \
     mv /tmp/testssl/testssl.sh /usr/lib/testssl/testssl.sh && \
     chmod ugo+x /usr/lib/testssl/testssl.sh
 
-FROM node:22-bookworm-slim AS release
+FROM node:22.18-bookworm-slim AS release
 # Default entry point
 WORKDIR /workdir
 
