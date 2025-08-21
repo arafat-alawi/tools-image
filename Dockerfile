@@ -43,8 +43,13 @@ RUN python3 -m pip install --no-build-isolation PyYAML==5.4.1 --no-cache-dir
 # Step 3: Install all remaining dependencies
 RUN python3 -m pip install -r requirements.txt --no-cache-dir
 
+# Install Grype
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+RUN curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin "${GRYPE}"
+
 
 # Step 4: Generate SBOM of all installed packages
+
 
 RUN cyclonedx-py -r -i requirements.txt --format json -o /opt/venv/sbom.json
 
@@ -80,6 +85,7 @@ COPY --chown=999:999 --from=build /opt/venv /opt/venv
 COPY --from=build /usr/lib/nikto/ /usr/lib/nikto/
 COPY --from=build /usr/lib/sonar-scanner/ /usr/lib/sonar-scanner/
 COPY --from=build /usr/lib/testssl/ /usr/lib/testssl/
+COPY --from=build /usr/local/bin/grype /usr/local/bin/grype
 RUN ln -s /usr/lib/nikto/nikto.pl /usr/local/bin/nikto.pl && \
     ln -s /usr/lib/sonar-scanner/bin/sonar-scanner /usr/local/bin/sonar-scanner && \
     ln -s /usr/lib/testssl/testssl.sh /usr/local/bin/testssl.sh
