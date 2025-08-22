@@ -1,4 +1,4 @@
-anchorecli
+anchorecli==0.9.3
 ansible-lint
 cyclonedx-bom
 detect-secrets
