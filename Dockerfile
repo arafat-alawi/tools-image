@@ -34,7 +34,7 @@ ENV PATH="/opt/venv/bin:$PATH"
 
 
 
-
+RUN python3 -m pip install "Cython<3.0.0" wheel --no-cache-dir
 
 # Step 2: Install PyYAML 5.4.1 from source
 RUN python3 -m pip install --no-build-isolation PyYAML==5.4.1 --no-cache-dir
