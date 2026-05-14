@@ -33,7 +33,6 @@ RUN python3 -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
 
-
 RUN python3 -m pip install "Cython<3.0.0" wheel --no-cache-dir
 
 # Step 2: Install PyYAML 5.4.1 from source
@@ -46,9 +45,7 @@ RUN python3 -m pip install -r requirements.txt --no-cache-dir
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin "${GRYPE}"
 
-
 # Step 4: Generate SBOM of all installed packages
-
 
 RUN cyclonedx-py -r -i requirements.txt --format json -o /opt/venv/sbom.json
 
@@ -129,3 +126,4 @@ RUN groupadd -r tool && \
     useradd --create-home --no-log-init --shell /bin/bash --system --gid tool --groups tool,node tool
 
 USER tool
+
