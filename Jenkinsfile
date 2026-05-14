@@ -44,11 +44,18 @@ pipeline {
                             tag = "${BRANCH_NAME}"
                         }
                     }
-                    def image = docker.build("$DOCKER_IMAGE", "--build-arg 'BUILDKIT_INLINE_CACHE=1' --cache-from $DOCKER_IMAGE:$tag --cache-from $DOCKER_IMAGE:latest .")
                     // Make sure that the user ID exists within the container
-                    image.inside("--volume /home/jenkins:/home/jenkins  --volume /etc/passwd:/etc/passwd  ") {
-                        sh label: "Test Python requests version",
-                       script: "echo $HOME"
+                    def image = "${DOCKER_IMAGE}:latest"
+
+                    sh """
+                     docker buildx build \
+                     --cache-from type=registry,ref=${DOCKER_IMAGE}:buildcache-latest \
+                    --cache-to type=registry,ref=${DOCKER_IMAGE}:buildcache-latest,mode=max \
+                     -t ${image}  \
+                    --push \
+                    backend
+                   """                    
+                    image.inside(" --volume /etc/passwd:/etc/passwd:ro") {
                         sh label: "Test anchore-cli",
                             script: "anchore-cli --version"
                         sh label: "Test curl",
@@ -60,7 +67,7 @@ pipeline {
                         sh label: "Test nikto.pl",
                             script: "nikto.pl -Version"
                         sh label: "Test for outdated global npm packages",
-                            script: "  npm outdated --global "
+                            script: "npm outdated --global"
                         sh label: "Test sonar-scanner",
                             script: "sonar-scanner --version"
                         sh label: "Test trufflehog",
@@ -96,3 +103,5 @@ pipeline {
         }
     }
 }
+
+
