@@ -53,7 +53,7 @@ pipeline {
                     --cache-to type=registry,ref=${DOCKER_IMAGE}:buildcache-latest,mode=max \
                      -t ${image}  \
                     --push \
-                    backend
+                    .
                    """                    
                     image.inside(" --volume /etc/passwd:/etc/passwd:ro") {
                         sh label: "Test anchore-cli",
