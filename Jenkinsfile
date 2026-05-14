@@ -48,7 +48,7 @@ pipeline {
                     // Make sure that the user ID exists within the container
                     image.inside("--volume /home/jenkins:/home/jenkins  --volume /etc/passwd:/etc/passwd  ") {
                         sh label: "Test Python requests version",
-        script: "echo $HOME"
+                       script: "echo $HOME"
                         sh label: "Test anchore-cli",
                             script: "anchore-cli --version"
                         sh label: "Test curl",
