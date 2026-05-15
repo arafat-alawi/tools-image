@@ -45,12 +45,12 @@ pipeline {
                         }
                     }
                     // Make sure that the user ID exists within the container
-                    def imageName  = "${DOCKER_IMAGE}:buildcache-latest"
+                    def imageName  = "${DOCKER_IMAGE}:latest"
 
                     sh """
                      docker buildx build \
-                     --cache-from type=registry,ref=${DOCKER_IMAGE}:buildcache-latest \
-                    --cache-to type=registry,ref=${DOCKER_IMAGE}:buildcache-latest,mode=max \
+                     --cache-from type=registry,ref=${DOCKER_IMAGE}:latest \
+                    --cache-to type=registry,ref=${DOCKER_IMAGE}:latest,mode=max \
                      -t ${imageName}  \
                     --push \
                     .
