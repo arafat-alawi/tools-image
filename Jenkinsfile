@@ -49,7 +49,7 @@ pipeline {
 
                     sh """
                      docker buildx build \
-                     --cache-from type=registry,ref=${DOCKER_IMAGE}:latest \
+                     --cache-from type=registry,ref=${DOCKER_IMAGE}:buildcache-latest \
                     --cache-to type=registry,ref=${DOCKER_IMAGE}:latest,mode=max \
                      -t ${imageName}  \
                     --push \
