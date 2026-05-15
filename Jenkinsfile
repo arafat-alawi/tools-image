@@ -45,16 +45,18 @@ pipeline {
                         }
                     }
                     // Make sure that the user ID exists within the container
-                    def image = "${DOCKER_IMAGE}:buildcache-latest"
+                    def imageName  = docker.image("${DOCKER_IMAGE}:buildcache-latest")
 
                     sh """
                      docker buildx build \
                      --cache-from type=registry,ref=${DOCKER_IMAGE}:buildcache-latest \
                     --cache-to type=registry,ref=${DOCKER_IMAGE}:buildcache-latest,mode=max \
-                     -t ${image}  \
+                     -t ${imageName}  \
                     --push \
                     .
-                   """                    
+                   """              
+                   def image = docker.image(imageName)
+      
                     image.inside(" --volume /etc/passwd:/etc/passwd:ro") {
                         sh label: "Test anchore-cli",
                             script: "anchore-cli --version"
