@@ -45,7 +45,7 @@ pipeline {
                         }
                     }
                     // Make sure that the user ID exists within the container
-                    def image = "${DOCKER_IMAGE}:latest"
+                    def image = "${DOCKER_IMAGE}:buildcache-latest"
 
                     sh """
                      docker buildx build \
