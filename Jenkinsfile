@@ -55,9 +55,8 @@ pipeline {
                     --push \
                     .
                    """              
-                   def image = docker.image(imageName)
       
-                    image.inside(" --volume /etc/passwd:/etc/passwd:ro") {
+                    imageName.inside(" --volume /etc/passwd:/etc/passwd:ro") {
                         sh label: "Test anchore-cli",
                             script: "anchore-cli --version"
                         sh label: "Test curl",
