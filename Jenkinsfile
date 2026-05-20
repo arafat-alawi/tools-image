@@ -54,7 +54,7 @@ pipeline {
                     --push \
                     .
                    """    
-
+              
                    def imageName  = "${DOCKER_IMAGE}:latest"
 
                     imageName.inside(" --volume /etc/passwd:/etc/passwd:ro") {
