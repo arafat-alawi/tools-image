@@ -9,7 +9,7 @@ WORKDIR /
 COPY requirements.txt .
 
 ENV DEBIAN_FRONTEND=noninteractive
-ARG GRYPE=v0.74.1 \
+ARG GRYPE=v0.111.0 \
     NIKTO=2.5.0 \
     SCANNER=5.0.1.3006 \
     TESTSSL=v3.2rc3
