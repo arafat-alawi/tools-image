@@ -45,7 +45,6 @@ pipeline {
                         }
                     }
                     // Make sure that the user ID exists within the container
-                    def imageName  = "${DOCKER_IMAGE}:latest"
 
                     sh """
                      docker buildx build \
@@ -55,7 +54,8 @@ pipeline {
                     --push \
                     .
                    """              
-      
+                 def imageName  = "${DOCKER_IMAGE}:latest"
+
                     imageName.inside(" --volume /etc/passwd:/etc/passwd:ro") {
                         sh label: "Test anchore-cli",
                             script: "anchore-cli --version"
